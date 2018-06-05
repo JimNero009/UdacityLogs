@@ -17,7 +17,11 @@ def most_popular_authors(dbq):
     print(result)
 
 def http_error_days(dbq):
-    pass
+    q = (
+        "select total_reqs.date, cast(bad_reqs.total_bad as decimal)/cast(total_reqs.total as decimal) as error_rate from (select date(time) as date, count(log.status) as total from log group by date(log.time) order by date(log.time)) as total_reqs, (select date(time) as date, count(log.status) as total_bad from log where log.status != '200 OK' group by date(log.time) order by date(log.time)) as bad_reqs where total_reqs.date = bad_reqs.date and cast(bad_reqs.total_bad as decimal)/cast(total_reqs.total as decimal) > 0.01"
+    )
+    result = dbq.perform_query(q)
+    print(result)
 
 
 if __name__ == '__main__':
