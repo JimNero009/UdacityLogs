@@ -10,8 +10,11 @@ def most_popular_articles(dbq):
 
 
 def most_popular_authors(dbq):
-    pass
-
+    q = (
+       "select authors.name, views.sum from (select articles.author, sum(reqs.num) as sum from (select log.path, count(*) as num from log where log.path like '/article/%' and log.method = 'GET' group by log.path) as reqs, articles where reqs.path like concat('/article/', articles.slug) group by articles.author) as views, authors where authors.id = views.author order by sum desc;"
+    )
+    result = dbq.perform_query(q)
+    print(result)
 
 def http_error_days(dbq):
     pass
